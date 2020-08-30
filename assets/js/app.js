@@ -95,6 +95,16 @@ function renderYAxes(newYScale, yAxis) {
   
     return circlesGroup;
   }
+
+  function renderText(circlesGroup, newXScale, newYScale, chosenXAxis, chosenYAxis) {
+  
+    circlesGroup.transition()
+      .duration(1000)
+      .attr("x", d => newXScale(d[chosenXAxis]))
+      .attr("y", d => newYScale(d[chosenYAxis]));
+  
+    return circlesGroup;
+  }
   
   // function used for updating circles group with new tooltip
   function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
@@ -191,6 +201,17 @@ function renderYAxes(newYScale, yAxis) {
       .attr("r", 20)
       .attr("fill", "pink")
       .attr("opacity", ".5");
+
+    var stateCircleText = chartGroup.selectAll('cirlce')
+      .data(povertyData)
+      .enter()
+      .append("text")
+      .text( d=> (d.abbr))
+      .attr("x", d => xLinearScale(d[chosenXAxis]))
+      .attr("y", d => yLinearScale(d[chosenYAxis]))
+      .style("text-anchor", "middle")
+      .style("font-size", "8px");
+
   
     // Create group for two x-axis labels
     var labelsGroup = chartGroup.append("g")
@@ -279,9 +300,13 @@ function renderYAxes(newYScale, yAxis) {
   
           // updates circles with new x values
           circlesGroup = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+
+          stateCircleText = renderText(stateCircleText, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
   
           // updates tooltips with new info
           circlesGroup = updateToolTip(circlesGroup, chosenXAxis, chosenYAxis);
+
+          
   
           // changes classes to change bold text
           if (chosenXAxis === "age") {
@@ -335,6 +360,8 @@ function renderYAxes(newYScale, yAxis) {
   
           // updates circles with new x values
           circlesGroup = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+
+          stateCircleText = renderText(stateCircleText, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
   
           // updates tooltips with new info
           circlesGroup = updateToolTip(circlesGroup, chosenXAxis,chosenYAxis);
